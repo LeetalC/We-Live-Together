@@ -23,11 +23,20 @@ public:
 
 	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
-	float BaseTurnRate;
+		float BaseTurnRate;
 
 	/** Base look up/down rate, in deg/sec. Other scaling may affect final rate. */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
-	float BaseLookUpRate;
+		float BaseLookUpRate;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
+		float Happiness = 100.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
+		float Hunger = 0.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
+		float Stamina = 100.0f;
 
 protected:
 
@@ -57,6 +66,9 @@ protected:
 
 	/** Handler for when a touch input stops. */
 	void TouchStopped(ETouchIndex::Type FingerIndex, FVector Location);
+
+
+	virtual void Tick(float DeltaSeconds);
 
 protected:
 	// APawn interface
