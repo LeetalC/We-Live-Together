@@ -40,7 +40,7 @@ public:
 		float Happiness = 100.0f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
-		float Fullness = 100.0f;
+		float Fullness = 0.0f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
 		float Stamina = 100.0f;
@@ -92,7 +92,10 @@ public:
 	UFUNCTION(BlueprintCallable)
 		void StopSprinting();
 
-
+	void CheckHappiness(float DeltaSeconds);
+	void CheckFullness(float DeltaSeconds);
+	void CheckStamina(float DeltaSeconds);
+	
 	bool IsSprinting;
 
 protected:

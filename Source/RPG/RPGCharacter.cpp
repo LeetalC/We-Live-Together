@@ -108,19 +108,36 @@ void ARPGCharacter::BeginPlay()
 void ARPGCharacter::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
-	if (Stamina <= 0.0f) {
+	CheckHappiness(DeltaSeconds);
+	CheckStamina(DeltaSeconds);
+	CheckFullness(DeltaSeconds);
+
+}
+void ARPGCharacter::CheckStamina(float DeltaSeconds) 
+{
+	if (Stamina <= 0.0f) 
+	{
 		StopSprinting();
 	}
-	if (IsSprinting == true) {
-		if(Stamina >= 0.0f)
+	if (IsSprinting == true) 
+	{
+		if (Stamina >= 0.0f)
 			Stamina -= StaminaDrainRate * DeltaSeconds;
 	}
-	else if(Stamina < MaxStamina) Stamina += StaminaFillRate * DeltaSeconds;
-
-	
-	Happiness -= HappinessDecrement * DeltaSeconds;
-	Fullness -= FullnessDecrement * DeltaSeconds;
-
+	else if (Stamina < MaxStamina) Stamina += StaminaFillRate * DeltaSeconds;
+}
+void ARPGCharacter::CheckHappiness(float DeltaSeconds) 
+{
+	if (Happiness > 0.0f) {
+		Happiness -= HappinessDecrement * DeltaSeconds;
+	}
+}
+void ARPGCharacter::CheckFullness(float DeltaSeconds)
+{
+	if (Fullness >= 0.0f)
+	{
+		Fullness -= FullnessDecrement * DeltaSeconds;
+	}
 }
 
 
