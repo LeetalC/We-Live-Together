@@ -7,7 +7,9 @@
 #include "Components/InputComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/Controller.h"
+#include "Engine/World.h"
 #include "GameFramework/SpringArmComponent.h"
+
 
 //////////////////////////////////////////////////////////////////////////
 // ARPGCharacter
@@ -20,6 +22,7 @@ ARPGCharacter::ARPGCharacter()
 	// set our turn rates for input
 	BaseTurnRate = 45.f;
 	BaseLookUpRate = 45.f;
+
 
 	// Don't rotate when the controller rotates. Let that just affect the camera.
 	bUseControllerRotationPitch = false;
@@ -56,6 +59,9 @@ void ARPGCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInput
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
 
+	PlayerInputComponent->BindAction("Sprint", IE_Pressed, this, &ARPGCharacter::Sprint);
+	PlayerInputComponent->BindAction("Sprint", IE_Released, this, &ARPGCharacter::StopSprinting);
+
 	PlayerInputComponent->BindAxis("MoveForward", this, &ARPGCharacter::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &ARPGCharacter::MoveRight);
 
@@ -73,6 +79,7 @@ void ARPGCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInput
 
 	// VR headset functionality
 	PlayerInputComponent->BindAction("ResetVR", IE_Pressed, this, &ARPGCharacter::OnResetVR);
+	
 }
 
 
@@ -92,11 +99,26 @@ void ARPGCharacter::TouchStopped(ETouchIndex::Type FingerIndex, FVector Location
 		StopJumping();
 }
 
+void ARPGCharacter::BeginPlay()
+{
+	Super::BeginPlay();
+	DefaultMaxWalkSpeed = 200.0f;
+	MaxSprintSpeed = 600.0f;
+}
 void ARPGCharacter::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
+	if (Stamina <= 0.0f) {
+		StopSprinting();
+	}
+	if (IsSprinting == true) {
+		if(Stamina >= 0.0f)
+			Stamina -= StaminaDrainRate * DeltaSeconds;
+	}
+	else if(Stamina < MaxStamina) Stamina += StaminaFillRate * DeltaSeconds;
+
+	
 	Happiness -= HappinessDecrement * DeltaSeconds;
-	Stamina -= StaminaDecrement * DeltaSeconds;
 	Fullness -= FullnessDecrement * DeltaSeconds;
 
 }
@@ -159,3 +181,19 @@ void ARPGCharacter::AddHappiness(float value)
 {
 	Happiness += value;
 }
+
+void ARPGCharacter::Sprint()
+{
+	IsSprinting = true;
+	GetCharacterMovement()->MaxWalkSpeed = MaxSprintSpeed;
+}
+
+void ARPGCharacter::StopSprinting()
+{
+	IsSprinting = false;
+	GetCharacterMovement()->MaxWalkSpeed = DefaultMaxWalkSpeed;
+}
+
+
+
+

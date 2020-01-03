@@ -20,6 +20,7 @@ class ARPGCharacter : public ACharacter
 	class UCameraComponent* FollowCamera;
 public:
 	ARPGCharacter();
+	virtual void BeginPlay();
 
 	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
@@ -28,6 +29,12 @@ public:
 	/** Base look up/down rate, in deg/sec. Other scaling may affect final rate. */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
 		float BaseLookUpRate;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Character Movement: Walking")
+		float DefaultMaxWalkSpeed;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Character Movement: Walking")
+		float MaxSprintSpeed;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
 		float Happiness = 100.0f;
@@ -56,6 +63,11 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
 		float MaxStamina = 100.0f;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
+		float StaminaDrainRate = 15.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
+		float StaminaFillRate = 5.0f;
 
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = StatEvent)
 		void FullnessChanged();
@@ -74,11 +86,14 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 		void AddHappiness(float value);
+	
+	void Sprint();
+
+	UFUNCTION(BlueprintCallable)
+		void StopSprinting();
 
 
-
-
-
+	bool IsSprinting;
 
 protected:
 
