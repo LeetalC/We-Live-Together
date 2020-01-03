@@ -33,10 +33,52 @@ public:
 		float Happiness = 100.0f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
-		float Hunger = 0.0f;
+		float Fullness = 100.0f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
 		float Stamina = 100.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
+		float HappinessDecrement = 1.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
+		float FullnessDecrement = 1.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
+		float StaminaDecrement = 1.0f;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
+		float MaxHappiness = 100.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
+		float MaxFullness = 100.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
+		float MaxStamina = 100.0f;
+
+
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = StatEvent)
+		void FullnessChanged();
+
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = StatEvent)
+		void StaminaChanged();
+
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = StatEvent)
+		void HappinessChanged();
+
+	UFUNCTION(BlueprintCallable)
+		void AddFullness(float value);
+
+	UFUNCTION(BlueprintCallable)
+		void AddStamina(float value);
+
+	UFUNCTION(BlueprintCallable)
+		void AddHappiness(float value);
+
+
+
+
+
 
 protected:
 
