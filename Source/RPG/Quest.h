@@ -3,17 +3,47 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameFramework/Actor.h"
 #include "Quest.generated.h"
 
-/**
- * 
- */
-
-class RPG_API Quest
+USTRUCT(BlueprintType)
+struct FQuestInfos
 {
+	GENERATED_BODY()
 
-public:
-	Quest();
-	~Quest();
+	UPROPERTY(BlueprintReadWrite, Category = Variables)
+		FString QuestName;
+
+	UPROPERTY(BlueprintReadWrite, Category = Variables)
+		FString QuestDescription;
+
+	UPROPERTY(BlueprintReadWrite, Category = Variables)
+		float QuestReward;
+
+	UPROPERTY(BlueprintReadWrite, Category = Variables)
+		bool IsActive;
+
+	UPROPERTY(BlueprintReadWrite, Category = Variables)
+		bool IsComplete;
+
+};
+UCLASS()
+class RPG_API AQuest : public AActor
+{
+	GENERATED_BODY()
 	
+public:	
+	// Sets default values for this actor's properties
+	AQuest();
+
+protected:
+	// Called when the game starts or when spawned
+	virtual void BeginPlay() override;
+
+public:	
+	// Called every frame
+	virtual void Tick(float DeltaTime) override;
+
+
+
 };
