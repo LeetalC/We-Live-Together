@@ -92,9 +92,16 @@ public:
 	UFUNCTION(BlueprintCallable)
 		void StopSprinting();
 
+	UFUNCTION(BlueprintCallable)
+		void Rest();
+
 	void CheckHappiness(float DeltaSeconds);
 	void CheckFullness(float DeltaSeconds);
 	void CheckStamina(float DeltaSeconds);
+
+	void SetStamina(float value);
+	void SetHappiness(float value);
+	void SetFullness(float value);
 	
 	bool IsSprinting;
 

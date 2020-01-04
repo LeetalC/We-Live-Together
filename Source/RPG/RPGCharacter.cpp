@@ -199,6 +199,22 @@ void ARPGCharacter::AddHappiness(float value)
 	Happiness += value;
 }
 
+void ARPGCharacter::Rest()
+{
+	SetStamina(MaxStamina);
+}
+
+void ARPGCharacter::SetStamina(float value)
+{
+	Stamina = value;
+
+}
+void ARPGCharacter::SetHappiness(float value)
+{
+}
+void ARPGCharacter::SetFullness(float value)
+{
+}
 void ARPGCharacter::Sprint()
 {
 	IsSprinting = true;
