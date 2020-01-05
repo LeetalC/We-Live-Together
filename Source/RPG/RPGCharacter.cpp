@@ -49,6 +49,7 @@ ARPGCharacter::ARPGCharacter()
 	// are set in the derived blueprint asset named MyCharacter (to avoid direct content references in C++)
 	//AbilitySystemComponent = CreateDefaultSubobject<UAbilitySystem>(TEXT("AbilitySystemComponent"));
 	Happiness = 0.0f;
+	HappinessMultiplier = 1.0f;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -112,7 +113,7 @@ void ARPGCharacter::Tick(float DeltaSeconds)
 	Super::Tick(DeltaSeconds);
 	CheckHappiness(DeltaSeconds);
 	CheckStamina(DeltaSeconds);
-	CheckFullness(DeltaSeconds);
+	//CheckFullness(DeltaSeconds);
 
 }
 void ARPGCharacter::CheckStamina(float DeltaSeconds) 
@@ -134,13 +135,13 @@ void ARPGCharacter::CheckHappiness(float DeltaSeconds)
 		Happiness -= HappinessDecrement * DeltaSeconds;
 	}*/
 }
-void ARPGCharacter::CheckFullness(float DeltaSeconds)
-{
-	if (Fullness >= 0.0f)
-	{
-		Fullness -= FullnessDecrement * DeltaSeconds;
-	}
-}
+//void ARPGCharacter::CheckFullness(float DeltaSeconds)
+//{
+//	if (Fullness >= 0.0f)
+//	{
+//		Fullness -= FullnessDecrement * DeltaSeconds;
+//	}
+//}
 
 
 void ARPGCharacter::TurnAtRate(float Rate)
@@ -166,6 +167,7 @@ void ARPGCharacter::MoveForward(float Value)
 		// get forward vector
 		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
 		AddMovementInput(Direction, Value);
+		CharacterMoved();
 	}
 }
 
@@ -181,14 +183,15 @@ void ARPGCharacter::MoveRight(float Value)
 		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
 		// add movement in that direction
 		AddMovementInput(Direction, Value);
+		CharacterMoved();
 	}
 }
 
 
-void ARPGCharacter::AddFullness(float value)
-{
-	Fullness += value;
-}
+//void ARPGCharacter::AddFullness(float value)
+//{
+//	Fullness += value;
+//}
 
 void ARPGCharacter::AddStamina(float value)
 {
@@ -212,9 +215,9 @@ void ARPGCharacter::SetHappiness(float value)
 {
 	Happiness = value;
 }
-void ARPGCharacter::SetFullness(float value)
-{
-}
+//void ARPGCharacter::SetFullness(float value)
+//{
+//}
 
 void ARPGCharacter::AddLevel()
 {
