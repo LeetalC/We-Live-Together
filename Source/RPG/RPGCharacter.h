@@ -73,6 +73,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
 		float StaminaFillRate = 5.0f;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
+		float HappinessMultiplier = 1.0f;
+
 
 	UFUNCTION(BlueprintCallable)
 		void SetStamina(float value);

@@ -188,7 +188,6 @@ void ARPGCharacter::MoveRight(float Value)
 void ARPGCharacter::AddFullness(float value)
 {
 	Fullness += value;
-
 }
 
 void ARPGCharacter::AddStamina(float value)
@@ -198,7 +197,7 @@ void ARPGCharacter::AddStamina(float value)
 
 void ARPGCharacter::AddHappiness(float value)
 {
-	Happiness += value;
+	Happiness+= (value * HappinessMultiplier);
 	HappinessChanged();
 }
 
