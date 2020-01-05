@@ -17,6 +17,9 @@ public:
 	// Sets default values for this component's properties
 	UAbilitySystem();
 
+	UPROPERTY(EditAnywhere)
+		ACharacter* MyCharacter;
+
 	//ABILITIES-----------------------------
 	void Dash(); //Stag Dash
 	void HighJump(); //crow ability

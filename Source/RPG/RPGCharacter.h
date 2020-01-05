@@ -23,8 +23,6 @@ public:
 	virtual void BeginPlay();
 
 
-
-
 	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
 		float BaseTurnRate;
@@ -76,14 +74,14 @@ public:
 		float StaminaFillRate = 5.0f;
 
 
-	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = StatEvent)
-		void FullnessChanged();
+	UFUNCTION(BlueprintCallable)
+		void SetStamina(float value);
 
-	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = StatEvent)
-		void StaminaChanged();
+	UFUNCTION(BlueprintCallable)
+		void SetHappiness(float value);
 
-	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = StatEvent)
-		void HappinessChanged();
+	UFUNCTION(BlueprintCallable)
+		void SetFullness(float value);
 
 	UFUNCTION(BlueprintCallable)
 		void AddFullness(float value);
@@ -96,29 +94,33 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 		void AddLevel();
-	
+
+
+
+	//EVENTS-------------------------------------------------------------------------
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = StatEvent)
+		void FullnessChanged();
+
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = StatEvent)
+		void StaminaChanged();
+
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = StatEvent)
+		void HappinessChanged();
+
+
 	//SPRINTING-----------------------------
 	void Sprint();
 
 	UFUNCTION(BlueprintCallable)
 		void StopSprinting();
 
-	UFUNCTION(BlueprintCallable)
-		void Rest();
-	
 
 	void CheckHappiness(float DeltaSeconds);
 	void CheckFullness(float DeltaSeconds);
 	void CheckStamina(float DeltaSeconds);
 
-	void SetStamina(float value);
-	void SetHappiness(float value);
-	void SetFullness(float value);
 	
 	bool IsSprinting;
-
-	
-	
 
 protected:
 

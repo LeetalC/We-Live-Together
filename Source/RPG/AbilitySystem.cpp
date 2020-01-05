@@ -28,6 +28,7 @@ void UAbilitySystem::FindGrass()
 
 void UAbilitySystem::Rest()
 {
+
 }
 
 // Called when the game starts
