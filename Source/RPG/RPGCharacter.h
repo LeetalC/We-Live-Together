@@ -22,6 +22,9 @@ public:
 	ARPGCharacter();
 	virtual void BeginPlay();
 
+
+
+
 	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
 		float BaseTurnRate;
@@ -37,7 +40,10 @@ public:
 		float MaxSprintSpeed;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
-		float Happiness = 100.0f;
+		int level = 1;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
+		float Happiness = 0.0f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
 		float Fullness = 0.0f;
@@ -69,6 +75,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
 		float StaminaFillRate = 5.0f;
 
+
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = StatEvent)
 		void FullnessChanged();
 
@@ -86,7 +93,11 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 		void AddHappiness(float value);
+
+	UFUNCTION(BlueprintCallable)
+		void AddLevel();
 	
+	//SPRINTING-----------------------------
 	void Sprint();
 
 	UFUNCTION(BlueprintCallable)
@@ -94,6 +105,7 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 		void Rest();
+	
 
 	void CheckHappiness(float DeltaSeconds);
 	void CheckFullness(float DeltaSeconds);
@@ -104,6 +116,9 @@ public:
 	void SetFullness(float value);
 	
 	bool IsSprinting;
+
+	
+	
 
 protected:
 

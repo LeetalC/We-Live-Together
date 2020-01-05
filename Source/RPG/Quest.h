@@ -35,6 +35,11 @@ class RPG_API AQuest : public AActor
 public:	
 	// Sets default values for this actor's properties
 	AQuest();
+	/*UFUNCTION(BlueprintCallable)
+		void SetActive();
+	UFUNCTION(BlueprintCallable)
+		void SetInactive();*/
+	
 
 protected:
 	// Called when the game starts or when spawned

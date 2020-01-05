@@ -47,6 +47,7 @@ ARPGCharacter::ARPGCharacter()
 	FollowCamera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named MyCharacter (to avoid direct content references in C++)
+	//AbilitySystemComponent = CreateDefaultSubobject<UAbilitySystem>(TEXT("AbilitySystemComponent"));
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -81,8 +82,6 @@ void ARPGCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInput
 	PlayerInputComponent->BindAction("ResetVR", IE_Pressed, this, &ARPGCharacter::OnResetVR);
 	
 }
-
-
 
 void ARPGCharacter::OnResetVR()
 {
@@ -128,9 +127,9 @@ void ARPGCharacter::CheckStamina(float DeltaSeconds)
 }
 void ARPGCharacter::CheckHappiness(float DeltaSeconds) 
 {
-	if (Happiness > 0.0f) {
+	/*if (Happiness > 0.0f) {
 		Happiness -= HappinessDecrement * DeltaSeconds;
-	}
+	}*/
 }
 void ARPGCharacter::CheckFullness(float DeltaSeconds)
 {
@@ -197,6 +196,7 @@ void ARPGCharacter::AddStamina(float value)
 void ARPGCharacter::AddHappiness(float value)
 {
 	Happiness += value;
+	HappinessChanged();
 }
 
 void ARPGCharacter::Rest()
@@ -211,9 +211,15 @@ void ARPGCharacter::SetStamina(float value)
 }
 void ARPGCharacter::SetHappiness(float value)
 {
+	Happiness = value;
 }
 void ARPGCharacter::SetFullness(float value)
 {
+}
+
+void ARPGCharacter::AddLevel()
+{
+	level++;
 }
 void ARPGCharacter::Sprint()
 {
