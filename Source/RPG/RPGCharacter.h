@@ -43,26 +43,17 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
 		float Happiness = 0.0f;
 
-	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
-	//	float Fullness = 0.0f;
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
 		float Stamina = 100.0f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
 		float HappinessDecrement = 1.0f;
 
-	/*UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
-		float FullnessDecrement = 1.0f;*/
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
 		float StaminaDecrement = 1.0f;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
 		float MaxHappiness = 100.0f;
-
-	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
-	//	float MaxFullness = 100.0f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
 		float MaxStamina = 100.0f;
@@ -83,12 +74,6 @@ public:
 	UFUNCTION(BlueprintCallable)
 		void SetHappiness(float value);
 
-	//UFUNCTION(BlueprintCallable)
-	//	void SetFullness(float value);
-
-	//UFUNCTION(BlueprintCallable)
-	//	void AddFullness(float value);
-
 	UFUNCTION(BlueprintCallable)
 		void AddStamina(float value);
 
@@ -101,8 +86,6 @@ public:
 
 
 	//EVENTS-------------------------------------------------------------------------
-	//UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = StatEvent)
-	//	void FullnessChanged();
 
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = StatEvent)
 		void StaminaChanged();
@@ -120,11 +103,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 		void StopSprinting();
 
-
-	void CheckHappiness(float DeltaSeconds);
-	//void CheckFullness(float DeltaSeconds);
 	void CheckStamina(float DeltaSeconds);
-
+	void MyJump();
+	void MyStopJumping();
 	
 	bool IsSprinting;
 

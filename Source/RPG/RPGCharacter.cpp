@@ -6,6 +6,7 @@
 #include "Components/CapsuleComponent.h"
 #include "Components/InputComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Math/Vector.h"
 #include "GameFramework/Controller.h"
 #include "Engine/World.h"
 #include "GameFramework/SpringArmComponent.h"
@@ -59,8 +60,8 @@ void ARPGCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInput
 {
 	// Set up gameplay key bindings
 	check(PlayerInputComponent);
-	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
-	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
+	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ARPGCharacter::MyJump);
+	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ARPGCharacter::MyStopJumping);
 
 	PlayerInputComponent->BindAction("Sprint", IE_Pressed, this, &ARPGCharacter::Sprint);
 	PlayerInputComponent->BindAction("Sprint", IE_Released, this, &ARPGCharacter::StopSprinting);
@@ -92,6 +93,23 @@ void ARPGCharacter::OnResetVR()
 	UHeadMountedDisplayFunctionLibrary::ResetOrientationAndPosition();
 }
 
+
+void ARPGCharacter::MyJump()
+{
+	if (GetVelocity().Size() > 400.0f)
+	{
+		bPressedJump = true;
+		JumpKeyHoldTime = 0.0f;
+		Jump();
+	}
+}
+
+void ARPGCharacter::MyStopJumping()
+{
+	bPressedJump = false;
+	ResetJumpState();
+}
+
 void ARPGCharacter::TouchStarted(ETouchIndex::Type FingerIndex, FVector Location)
 {
 		Jump();
@@ -111,9 +129,7 @@ void ARPGCharacter::BeginPlay()
 void ARPGCharacter::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
-	CheckHappiness(DeltaSeconds);
 	CheckStamina(DeltaSeconds);
-	//CheckFullness(DeltaSeconds);
 
 }
 void ARPGCharacter::CheckStamina(float DeltaSeconds) 
@@ -129,19 +145,7 @@ void ARPGCharacter::CheckStamina(float DeltaSeconds)
 	}
 	else if (Stamina < MaxStamina) Stamina += StaminaFillRate * DeltaSeconds;
 }
-void ARPGCharacter::CheckHappiness(float DeltaSeconds) 
-{
-	/*if (Happiness > 0.0f) {
-		Happiness -= HappinessDecrement * DeltaSeconds;
-	}*/
-}
-//void ARPGCharacter::CheckFullness(float DeltaSeconds)
-//{
-//	if (Fullness >= 0.0f)
-//	{
-//		Fullness -= FullnessDecrement * DeltaSeconds;
-//	}
-//}
+
 
 
 void ARPGCharacter::TurnAtRate(float Rate)
@@ -187,12 +191,6 @@ void ARPGCharacter::MoveRight(float Value)
 	}
 }
 
-
-//void ARPGCharacter::AddFullness(float value)
-//{
-//	Fullness += value;
-//}
-
 void ARPGCharacter::AddStamina(float value)
 {
 	Stamina += value;
@@ -215,9 +213,6 @@ void ARPGCharacter::SetHappiness(float value)
 {
 	Happiness = value;
 }
-//void ARPGCharacter::SetFullness(float value)
-//{
-//}
 
 void ARPGCharacter::AddLevel()
 {
