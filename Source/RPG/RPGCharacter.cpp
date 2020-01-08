@@ -51,7 +51,15 @@ ARPGCharacter::ARPGCharacter()
 	//AbilitySystemComponent = CreateDefaultSubobject<UAbilitySystem>(TEXT("AbilitySystemComponent"));
 	Happiness = 0.0f;
 	HappinessMultiplier = 1.0f;
+	NumberOfLevels = 20;
+
+	
 }
+//float MinimumEXP = 50;
+//void PopulateLevelArray(int NumberOfLevels, float HappinessRequirementPerLevel[])
+//for (int i = 0; i < NumberOfLevels; i++) {
+//	HappinessRequirementPerLevel[i] = MinimumEXP * (i + 1);
+//}
 
 //////////////////////////////////////////////////////////////////////////
 // Input
@@ -84,8 +92,6 @@ void ARPGCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInput
 	// VR headset functionality
 	PlayerInputComponent->BindAction("ResetVR", IE_Pressed, this, &ARPGCharacter::OnResetVR);
 
-
-	
 }
 
 void ARPGCharacter::OnResetVR()
@@ -199,7 +205,9 @@ void ARPGCharacter::AddStamina(float value)
 void ARPGCharacter::AddHappiness(float value)
 {
 	Happiness+= (value * HappinessMultiplier);
+	UE_LOG(LogTemp, Warning, TEXT("message"));
 	HappinessChanged();
+	
 }
 
 

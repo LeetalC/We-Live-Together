@@ -67,6 +67,12 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
 		float HappinessMultiplier;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
+		int NumberOfLevels = 20;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
+		TArray<float> HappinessRequirementPerLevel;
+
 
 	UFUNCTION(BlueprintCallable)
 		void SetStamina(float value);
@@ -106,8 +112,13 @@ public:
 	void CheckStamina(float DeltaSeconds);
 	void MyJump();
 	void MyStopJumping();
+
 	
+
+	
+
 	bool IsSprinting;
+
 
 protected:
 
