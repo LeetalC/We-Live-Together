@@ -110,6 +110,9 @@ public:
 		void StopSprinting();
 
 	void CheckStamina(float DeltaSeconds);
+	void MoveBack(float Value);
+	void MyMoveRight(float Value);
+	void MyMoveForward(float Value);
 	void MyJump();
 	void MyStopJumping();
 

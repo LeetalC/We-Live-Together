@@ -70,8 +70,9 @@ void ARPGCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInput
 	PlayerInputComponent->BindAction("Sprint", IE_Pressed, this, &ARPGCharacter::Sprint);
 	PlayerInputComponent->BindAction("Sprint", IE_Released, this, &ARPGCharacter::StopSprinting);
 
-	PlayerInputComponent->BindAxis("MoveForward", this, &ARPGCharacter::MoveForward);
-	PlayerInputComponent->BindAxis("MoveRight", this, &ARPGCharacter::MoveRight);
+	PlayerInputComponent->BindAxis("MoveForward", this, &ARPGCharacter::MyMoveForward);
+	PlayerInputComponent->BindAxis("MoveBack", this, &ARPGCharacter::MoveBack);
+	PlayerInputComponent->BindAxis("MoveRight", this, &ARPGCharacter::MyMoveRight);
 
 	// We have 2 versions of the rotation bindings to handle different kinds of devices differently
 	// "turn" handles devices that provide an absolute delta, such as a mouse.
@@ -94,7 +95,54 @@ void ARPGCharacter::OnResetVR()
 {
 	UHeadMountedDisplayFunctionLibrary::ResetOrientationAndPosition();
 }
+void ARPGCharacter::MoveBack(float Value) {
+	if ((Controller != NULL) && (Value != 0.0f))
+	{
+		GetCharacterMovement()->bOrientRotationToMovement = false;
+		// find out which way is forward
+		//const FRotator Rotation = Controller->GetControlRotation();
+		//const FRotator YawRotation(0, Rotation.Yaw, 0);
 
+		// get forward vector
+		//const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
+		const FVector Direction = GetActorForwardVector();
+		AddMovementInput(Direction, Value);
+		CharacterMoved();
+	}
+}
+
+
+void ARPGCharacter::MyMoveForward(float Value) {
+	if ((Controller != NULL) && (Value != 0.0f))
+	{
+		GetCharacterMovement()->bOrientRotationToMovement = true;
+		// find out which way is forward
+		const FRotator Rotation = Controller->GetControlRotation();
+		const FRotator YawRotation(0, Rotation.Yaw, 0);
+
+		// get forward vector
+		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
+		AddMovementInput(Direction, Value);
+		CharacterMoved();
+	}
+}
+
+void ARPGCharacter::MyMoveRight(float Value) {
+	if ((Controller != NULL) && (Value != 0.0f))
+	{
+		// find out which way is right
+		GetCharacterMovement()->bOrientRotationToMovement = true;
+		const FRotator Rotation = Controller->GetControlRotation();
+		const FRotator YawRotation(0, Rotation.Yaw, 0);
+
+		// get right vector 
+		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
+		// add movement in that direction
+		AddMovementInput(Direction, Value);
+		CharacterMoved();
+	}
+
+}
 
 void ARPGCharacter::MyJump()
 {
@@ -111,6 +159,8 @@ void ARPGCharacter::MyStopJumping()
 	bPressedJump = false;
 	ResetJumpState();
 }
+
+
 
 void ARPGCharacter::TouchStarted(ETouchIndex::Type FingerIndex, FVector Location)
 {
@@ -130,6 +180,7 @@ void ARPGCharacter::BeginPlay()
 }
 void ARPGCharacter::Tick(float DeltaSeconds)
 {
+
 	Super::Tick(DeltaSeconds);
 	CheckStamina(DeltaSeconds);
 
@@ -226,8 +277,9 @@ void ARPGCharacter::AddLevel()
 }
 void ARPGCharacter::Sprint()
 {
-	
-	GetCharacterMovement()->MaxWalkSpeed = MaxSprintSpeed;
+	if (GetVelocity().Size() >= 190.0f) {
+		GetCharacterMovement()->MaxWalkSpeed = MaxSprintSpeed;
+	}
 }
 
 void ARPGCharacter::StopSprinting()
