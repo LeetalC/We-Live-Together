@@ -55,11 +55,7 @@ ARPGCharacter::ARPGCharacter()
 
 	
 }
-//float MinimumEXP = 50;
-//void PopulateLevelArray(int NumberOfLevels, float HappinessRequirementPerLevel[])
-//for (int i = 0; i < NumberOfLevels; i++) {
-//	HappinessRequirementPerLevel[i] = MinimumEXP * (i + 1);
-//}
+
 
 //////////////////////////////////////////////////////////////////////////
 // Input
@@ -140,6 +136,8 @@ void ARPGCharacter::Tick(float DeltaSeconds)
 }
 void ARPGCharacter::CheckStamina(float DeltaSeconds) 
 {
+	if (GetVelocity().Size() >= 400.0f) IsSprinting = true;
+	else IsSprinting = false;
 	if (Stamina <= 0.0f) 
 	{
 		StopSprinting();
@@ -228,7 +226,7 @@ void ARPGCharacter::AddLevel()
 }
 void ARPGCharacter::Sprint()
 {
-	IsSprinting = true;
+	
 	GetCharacterMovement()->MaxWalkSpeed = MaxSprintSpeed;
 }
 
