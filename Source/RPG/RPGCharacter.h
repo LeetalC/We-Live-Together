@@ -56,7 +56,7 @@ public:
 		float MaxStamina = 100.0f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
-		float StaminaDrainRate = 3.0f;
+		float StaminaDrainRate = 5.0f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
 		float StaminaFillRate = 5.0f;
