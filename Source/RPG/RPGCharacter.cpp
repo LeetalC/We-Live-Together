@@ -49,7 +49,7 @@ ARPGCharacter::ARPGCharacter()
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named MyCharacter (to avoid direct content references in C++)
 	//AbilitySystemComponent = CreateDefaultSubobject<UAbilitySystem>(TEXT("AbilitySystemComponent"));
-	Happiness = 0.0f;
+	Happiness = 0;
 	HappinessMultiplier = 1.0f;
 	NumberOfLevels = 20;
 
@@ -95,6 +95,95 @@ void ARPGCharacter::OnResetVR()
 {
 	UHeadMountedDisplayFunctionLibrary::ResetOrientationAndPosition();
 }
+
+
+
+void ARPGCharacter::TouchStarted(ETouchIndex::Type FingerIndex, FVector Location)
+{
+		Jump();
+}
+
+void ARPGCharacter::TouchStopped(ETouchIndex::Type FingerIndex, FVector Location)
+{
+		StopJumping();
+}
+
+void ARPGCharacter::BeginPlay()
+{
+	Super::BeginPlay();
+	DefaultMaxWalkSpeed = 200.0f;
+	MaxSprintSpeed = 600.0f;
+}
+void ARPGCharacter::Tick(float DeltaSeconds)
+{
+
+	Super::Tick(DeltaSeconds);
+	CheckStamina(DeltaSeconds);
+
+}
+void ARPGCharacter::CheckStamina(float DeltaSeconds) 
+{
+	if (GetVelocity().Size() >= 400.0f) IsSprinting = true;
+	else IsSprinting = false;
+	if (Stamina <= 0.0f) 
+	{
+		StopSprinting();
+	}
+	if (IsSprinting == true) 
+	{
+		if (Stamina >= 0.0f)
+			Stamina -= StaminaDrainRate * DeltaSeconds;
+	}
+	else if (Stamina < MaxStamina) Stamina += StaminaFillRate * DeltaSeconds;
+}
+
+
+//MOVEMENT INPUT FUNCTIONS-----------------------------------------------------
+void ARPGCharacter::TurnAtRate(float Rate)
+{
+	// calculate delta for this frame from the rate information
+	AddControllerYawInput(Rate * BaseTurnRate * GetWorld()->GetDeltaSeconds());
+}
+
+void ARPGCharacter::LookUpAtRate(float Rate)
+{
+	// calculate delta for this frame from the rate information
+	AddControllerPitchInput(Rate * BaseLookUpRate * GetWorld()->GetDeltaSeconds());
+}
+
+void ARPGCharacter::MoveForward(float Value)
+{
+	if ((Controller != NULL) && (Value != 0.0f))
+	{
+		// find out which way is forward
+		const FRotator Rotation = Controller->GetControlRotation();
+		const FRotator YawRotation(0, Rotation.Yaw, 0);
+
+		// get forward vector
+		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
+		AddMovementInput(Direction, Value);
+		CharacterMoved();
+	}
+}
+
+void ARPGCharacter::MoveRight(float Value)
+{
+	if ( (Controller != NULL) && (Value != 0.0f) )
+	{
+		// find out which way is right
+		const FRotator Rotation = Controller->GetControlRotation();
+		const FRotator YawRotation(0, Rotation.Yaw, 0);
+	
+		// get right vector 
+		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
+		// add movement in that direction
+		AddMovementInput(Direction, Value);
+		CharacterMoved();
+	}
+}
+
+//MY CUSTOM MOVEMENT FUNCTIONS-------
+
 void ARPGCharacter::MoveBack(float Value) {
 	if ((Controller != NULL) && (Value != 0.0f))
 	{
@@ -110,7 +199,6 @@ void ARPGCharacter::MoveBack(float Value) {
 		CharacterMoved();
 	}
 }
-
 
 void ARPGCharacter::MyMoveForward(float Value) {
 	if ((Controller != NULL) && (Value != 0.0f))
@@ -160,98 +248,25 @@ void ARPGCharacter::MyStopJumping()
 	ResetJumpState();
 }
 
-
-
-void ARPGCharacter::TouchStarted(ETouchIndex::Type FingerIndex, FVector Location)
-{
-		Jump();
-}
-
-void ARPGCharacter::TouchStopped(ETouchIndex::Type FingerIndex, FVector Location)
-{
-		StopJumping();
-}
-
-void ARPGCharacter::BeginPlay()
-{
-	Super::BeginPlay();
-	DefaultMaxWalkSpeed = 200.0f;
-	MaxSprintSpeed = 600.0f;
-}
-void ARPGCharacter::Tick(float DeltaSeconds)
+void ARPGCharacter::Sprint()
 {
 
-	Super::Tick(DeltaSeconds);
-	CheckStamina(DeltaSeconds);
-
+	GetCharacterMovement()->MaxWalkSpeed = MaxSprintSpeed;
 }
-void ARPGCharacter::CheckStamina(float DeltaSeconds) 
+
+void ARPGCharacter::StopSprinting()
 {
-	if (GetVelocity().Size() >= 400.0f) IsSprinting = true;
-	else IsSprinting = false;
-	if (Stamina <= 0.0f) 
-	{
-		StopSprinting();
-	}
-	if (IsSprinting == true) 
-	{
-		if (Stamina >= 0.0f)
-			Stamina -= StaminaDrainRate * DeltaSeconds;
-	}
-	else if (Stamina < MaxStamina) Stamina += StaminaFillRate * DeltaSeconds;
+	IsSprinting = false;
+	GetCharacterMovement()->MaxWalkSpeed = DefaultMaxWalkSpeed;
 }
-
-
-
-void ARPGCharacter::TurnAtRate(float Rate)
-{
-	// calculate delta for this frame from the rate information
-	AddControllerYawInput(Rate * BaseTurnRate * GetWorld()->GetDeltaSeconds());
-}
-
-void ARPGCharacter::LookUpAtRate(float Rate)
-{
-	// calculate delta for this frame from the rate information
-	AddControllerPitchInput(Rate * BaseLookUpRate * GetWorld()->GetDeltaSeconds());
-}
-
-void ARPGCharacter::MoveForward(float Value)
-{
-	if ((Controller != NULL) && (Value != 0.0f))
-	{
-		// find out which way is forward
-		const FRotator Rotation = Controller->GetControlRotation();
-		const FRotator YawRotation(0, Rotation.Yaw, 0);
-
-		// get forward vector
-		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
-		AddMovementInput(Direction, Value);
-		CharacterMoved();
-	}
-}
-
-void ARPGCharacter::MoveRight(float Value)
-{
-	if ( (Controller != NULL) && (Value != 0.0f) )
-	{
-		// find out which way is right
-		const FRotator Rotation = Controller->GetControlRotation();
-		const FRotator YawRotation(0, Rotation.Yaw, 0);
-	
-		// get right vector 
-		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
-		// add movement in that direction
-		AddMovementInput(Direction, Value);
-		CharacterMoved();
-	}
-}
+//END MOVEMENT INPUT FUNCTIONS-----------------------------------------------------
 
 void ARPGCharacter::AddStamina(float value)
 {
 	Stamina += value;
 }
 
-void ARPGCharacter::AddHappiness(float value)
+void ARPGCharacter::AddHappiness(int value)
 {
 	Happiness+= (value * HappinessMultiplier);
 	UE_LOG(LogTemp, Warning, TEXT("message"));
@@ -259,14 +274,12 @@ void ARPGCharacter::AddHappiness(float value)
 	
 }
 
-
-
 void ARPGCharacter::SetStamina(float value)
 {
 	Stamina = value;
 
 }
-void ARPGCharacter::SetHappiness(float value)
+void ARPGCharacter::SetHappiness(int value)
 {
 	Happiness = value;
 }
@@ -275,19 +288,4 @@ void ARPGCharacter::AddLevel()
 {
 	level++;
 }
-void ARPGCharacter::Sprint()
-{
-	if (GetVelocity().Size() >= 190.0f) {
-		GetCharacterMovement()->MaxWalkSpeed = MaxSprintSpeed;
-	}
-}
-
-void ARPGCharacter::StopSprinting()
-{
-	IsSprinting = false;
-	GetCharacterMovement()->MaxWalkSpeed = DefaultMaxWalkSpeed;
-}
-
-
-
 

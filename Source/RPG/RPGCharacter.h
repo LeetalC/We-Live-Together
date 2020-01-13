@@ -41,25 +41,22 @@ public:
 		int level = 1;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
-		float Happiness = 0.0f;
+		int Happiness = 0;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
 		float Stamina = 100.0f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
-		float HappinessDecrement = 1.0f;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
 		float StaminaDecrement = 1.0f;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
-		float MaxHappiness = 100.0f;
+		int MaxHappiness;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
 		float MaxStamina = 100.0f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
-		float StaminaDrainRate = 5.0f;
+		float StaminaDrainRate = 3.0f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
 		float StaminaFillRate = 5.0f;
@@ -71,20 +68,20 @@ public:
 		int NumberOfLevels = 20;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
-		TArray<float> HappinessRequirementPerLevel;
+		TArray<int> HappinessRequirementPerLevel;
 
 
 	UFUNCTION(BlueprintCallable)
 		void SetStamina(float value);
 
 	UFUNCTION(BlueprintCallable)
-		void SetHappiness(float value);
+		void SetHappiness(int value);
 
 	UFUNCTION(BlueprintCallable)
 		void AddStamina(float value);
 
 	UFUNCTION(BlueprintCallable)
-		void AddHappiness(float value);
+		void AddHappiness(int value);
 
 	UFUNCTION(BlueprintCallable)
 		void AddLevel();
