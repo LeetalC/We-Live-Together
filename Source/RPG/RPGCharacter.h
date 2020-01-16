@@ -65,6 +65,9 @@ public:
 		float HappinessMultiplier;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
+		int AbilityPoints;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
 		int NumberOfLevels = 20;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
@@ -81,11 +84,16 @@ public:
 		void AddStamina(float value);
 
 	UFUNCTION(BlueprintCallable)
-		void AddHappiness(int value);
+		void AddHappiness(int Value, bool CanUseHappinessMultiplier);
 
 	UFUNCTION(BlueprintCallable)
 		void AddLevel();
 
+	UFUNCTION(BlueprintCallable)
+		void SetMaxSprintSpeed(float Value);
+
+	UFUNCTION(BlueprintCallable)
+		void AddToStaminaDrainRate(float Value);
 
 
 	//EVENTS-------------------------------------------------------------------------

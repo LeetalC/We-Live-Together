@@ -17,7 +17,7 @@
 
 ARPGCharacter::ARPGCharacter()
 {
-	// Set size for collision capsule
+	// Set size for collision capsule	
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
 
 	// set our turn rates for input
@@ -113,6 +113,7 @@ void ARPGCharacter::BeginPlay()
 	Super::BeginPlay();
 	DefaultMaxWalkSpeed = 200.0f;
 	MaxSprintSpeed = 600.0f;
+	AbilityPoints = level;
 }
 void ARPGCharacter::Tick(float DeltaSeconds)
 {
@@ -266,9 +267,15 @@ void ARPGCharacter::AddStamina(float value)
 	Stamina += value;
 }
 
-void ARPGCharacter::AddHappiness(int value)
+void ARPGCharacter::AddHappiness(int Value, bool CanUseHappinessMultiplier)
 {
-	Happiness+= (value * HappinessMultiplier);
+	if (CanUseHappinessMultiplier)
+	{
+		Happiness += (Value * HappinessMultiplier);
+	}
+	else {
+		Happiness += Value;
+	}
 	UE_LOG(LogTemp, Warning, TEXT("message"));
 	HappinessChanged();
 	
@@ -287,5 +294,16 @@ void ARPGCharacter::SetHappiness(int value)
 void ARPGCharacter::AddLevel()
 {
 	level++;
+	AbilityPoints++;
 }
 
+
+void ARPGCharacter::SetMaxSprintSpeed(float Value)
+{
+	MaxSprintSpeed = Value;
+}
+
+void ARPGCharacter::AddToStaminaDrainRate(float Value)
+{
+	StaminaDrainRate += Value;
+}
