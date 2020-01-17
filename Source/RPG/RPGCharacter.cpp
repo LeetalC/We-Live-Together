@@ -113,7 +113,7 @@ void ARPGCharacter::BeginPlay()
 	Super::BeginPlay();
 	DefaultMaxWalkSpeed = 200.0f;
 	MaxSprintSpeed = 600.0f;
-	AbilityPoints = level;
+	PerkPoints = Level;
 }
 void ARPGCharacter::Tick(float DeltaSeconds)
 {
@@ -293,8 +293,8 @@ void ARPGCharacter::SetHappiness(int value)
 
 void ARPGCharacter::AddLevel()
 {
-	level++;
-	AbilityPoints++;
+	Level++;
+	PerkPoints++;
 }
 
 

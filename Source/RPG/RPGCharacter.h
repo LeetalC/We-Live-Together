@@ -38,7 +38,7 @@ public:
 		float MaxSprintSpeed;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
-		int level = 1;
+		int Level = 1;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
 		int Happiness = 0;
@@ -65,7 +65,7 @@ public:
 		float HappinessMultiplier;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
-		int AbilityPoints;
+		int PerkPoints;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
 		int NumberOfLevels = 20;
