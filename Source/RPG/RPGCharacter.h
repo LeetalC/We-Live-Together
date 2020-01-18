@@ -48,6 +48,12 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
 		float StaminaDecrement = 1.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
+		float BreathDrainRate;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
+		float BreathFillRate;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
 		int MaxHappiness;
@@ -69,6 +75,12 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
 		int NumberOfLevels = 20;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
+		float Breath;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
+		bool BreathDraining;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
 		TArray<int> HappinessRequirementPerLevel;
@@ -94,6 +106,9 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 		void AddToStaminaDrainRate(float Value);
+	
+	UFUNCTION(BlueprintCallable)
+		void ChangeBreath(float DeltaSeconds, bool isDraining);
 
 
 	//EVENTS-------------------------------------------------------------------------
@@ -113,6 +128,7 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 		void StopSprinting();
+
 
 	void CheckStamina(float DeltaSeconds);
 	void MoveBack(float Value);

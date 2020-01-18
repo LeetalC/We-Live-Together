@@ -52,6 +52,9 @@ ARPGCharacter::ARPGCharacter()
 	Happiness = 0;
 	HappinessMultiplier = 1.0f;
 	NumberOfLevels = 20;
+	Breath = 100.0f;
+	BreathDraining = false;
+
 
 	
 }
@@ -136,6 +139,21 @@ void ARPGCharacter::CheckStamina(float DeltaSeconds)
 			Stamina -= StaminaDrainRate * DeltaSeconds;
 	}
 	else if (Stamina < MaxStamina) Stamina += StaminaFillRate * DeltaSeconds;
+}
+
+void ARPGCharacter::ChangeBreath(float DeltaSeconds, bool isDraining)
+{
+	if (isDraining) {
+		if (Breath >= 0.0f) {
+			Breath -= BreathDrainRate * DeltaSeconds;
+		}
+	}
+	else 
+	{
+		if(Breath <= 100.0f)
+		Breath += BreathFillRate * DeltaSeconds;
+	}
+
 }
 
 
