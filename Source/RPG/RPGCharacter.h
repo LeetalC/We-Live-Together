@@ -122,6 +122,8 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = Movement)
 		void CharacterMoved();
 
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = Movement)
+		void Die();
 
 	//SPRINTING-----------------------------
 	void Sprint();

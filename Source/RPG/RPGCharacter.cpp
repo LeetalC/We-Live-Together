@@ -144,9 +144,10 @@ void ARPGCharacter::CheckStamina(float DeltaSeconds)
 void ARPGCharacter::ChangeBreath(float DeltaSeconds, bool isDraining)
 {
 	if (isDraining) {
-		if (Breath >= 0.0f) {
+		if (Breath > 0.0f) {
 			Breath -= BreathDrainRate * DeltaSeconds;
 		}
+		else if(Breath <= 0.0f) Die();
 	}
 	else 
 	{
