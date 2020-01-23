@@ -85,6 +85,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
 		TArray<int> HappinessRequirementPerLevel;
 
+	//FUNCTIONS-------------------------------------------------------
+
+	UFUNCTION(BlueprintPure)
+		bool CanAffordStaminaCost(float Value);
 
 	UFUNCTION(BlueprintCallable)
 		void SetStamina(float value);

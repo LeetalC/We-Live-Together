@@ -121,11 +121,13 @@ void ARPGCharacter::BeginPlay()
 }
 void ARPGCharacter::Tick(float DeltaSeconds)
 {
-
 	Super::Tick(DeltaSeconds);
 	CheckStamina(DeltaSeconds);
 
 }
+
+
+
 void ARPGCharacter::CheckStamina(float DeltaSeconds) 
 {
 	if (GetVelocity().Size() >= 400.0f) IsSprinting = true;
@@ -283,17 +285,22 @@ void ARPGCharacter::StopSprinting()
 }
 //END MOVEMENT INPUT FUNCTIONS-----------------------------------------------------
 
-void ARPGCharacter::AddStamina(float value)
-{
+bool ARPGCharacter::CanAffordStaminaCost(float value) {
 	if (value < 0.0f) {
 		if (Stamina > abs(value)) {
-			Stamina += value;
+			return true;
 		}
 	}
 	else {
-		Stamina += value;
+		return true;
 	}
-	
+	return false;
+}
+
+
+void ARPGCharacter::AddStamina(float value)
+{
+	Stamina += value;
 }
 
 void ARPGCharacter::AddHappiness(int Value, bool CanUseHappinessMultiplier)
