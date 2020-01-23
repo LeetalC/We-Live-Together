@@ -122,7 +122,7 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = Movement)
 		void CharacterMoved();
 
-	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = Movement)
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = StatEvent)
 		void Die();
 
 	//SPRINTING-----------------------------

@@ -7,6 +7,7 @@
 #include "Components/InputComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Math/Vector.h"
+#include "GenericPlatform/GenericPlatformMath.h"
 #include "GameFramework/Controller.h"
 #include "Engine/World.h"
 #include "GameFramework/SpringArmComponent.h"
@@ -129,6 +130,7 @@ void ARPGCharacter::CheckStamina(float DeltaSeconds)
 {
 	if (GetVelocity().Size() >= 400.0f) IsSprinting = true;
 	else IsSprinting = false;
+
 	if (Stamina <= 0.0f) 
 	{
 		StopSprinting();
@@ -283,7 +285,15 @@ void ARPGCharacter::StopSprinting()
 
 void ARPGCharacter::AddStamina(float value)
 {
-	Stamina += value;
+	if (value < 0.0f) {
+		if (Stamina > abs(value)) {
+			Stamina += value;
+		}
+	}
+	else {
+		Stamina += value;
+	}
+	
 }
 
 void ARPGCharacter::AddHappiness(int Value, bool CanUseHappinessMultiplier)
