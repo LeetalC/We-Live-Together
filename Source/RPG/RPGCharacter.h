@@ -6,6 +6,8 @@
 #include "GameFramework/Character.h"
 #include "RPGCharacter.generated.h"
 
+
+
 UCLASS(config=Game)
 class ARPGCharacter : public ACharacter
 {
@@ -21,7 +23,6 @@ class ARPGCharacter : public ACharacter
 public:
 	ARPGCharacter();
 	virtual void BeginPlay();
-
 
 	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
@@ -83,6 +84,9 @@ public:
 		bool BreathDraining;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
+		bool Alive;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
 		TArray<int> HappinessRequirementPerLevel;
 
 	//FUNCTIONS-------------------------------------------------------
@@ -112,7 +116,7 @@ public:
 		void AddToStaminaDrainRate(float Value);
 	
 	UFUNCTION(BlueprintCallable)
-		void ChangeBreath(float DeltaSeconds, bool isDraining);
+		void ChangeBreath(bool isDraining);
 
 
 	//EVENTS-------------------------------------------------------------------------
@@ -125,6 +129,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = Movement)
 		void CharacterMoved();
+
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = StatEvent)
+		void BreathChanged();
 
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = StatEvent)
 		void Die();

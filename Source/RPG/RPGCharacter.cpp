@@ -55,6 +55,7 @@ ARPGCharacter::ARPGCharacter()
 	NumberOfLevels = 20;
 	Breath = 100.0f;
 	BreathDraining = false;
+	Alive = true;
 
 
 	
@@ -145,18 +146,21 @@ void ARPGCharacter::CheckStamina(float DeltaSeconds)
 	else if (Stamina < MaxStamina) Stamina += StaminaFillRate * DeltaSeconds;
 }
 
-void ARPGCharacter::ChangeBreath(float DeltaSeconds, bool isDraining)
+void ARPGCharacter::ChangeBreath(bool isDraining)
 {
 	if (isDraining) {
 		if (Breath > 0.0f) {
-			Breath -= BreathDrainRate * DeltaSeconds;
+			Breath -= BreathDrainRate;
 		}
-		else if(Breath <= 0.0f) Die();
+		else if (Breath <= 0.0f) {
+			Alive = false;
+			Die();
+		}
 	}
 	else 
 	{
-		if(Breath <= 100.0f)
-		Breath += BreathFillRate * DeltaSeconds;
+		if (Breath <= 100.0f)
+			Breath += BreathFillRate;
 	}
 
 }
