@@ -316,7 +316,9 @@ void ARPGCharacter::AddHappiness(int Value, bool CanUseHappinessMultiplier)
 	else {
 		Happiness += Value;
 	}
-	UE_LOG(LogTemp, Warning, TEXT("message"));
+	TempHappiness += Happiness;
+	
+
 	HappinessChanged();
 	
 }

@@ -45,6 +45,12 @@ public:
 		int Happiness = 0;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
+		int MaxHappiness;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
+		int TempHappiness = 0;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
 		float Stamina = 100.0f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
@@ -56,8 +62,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
 		float BreathFillRate;
 	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
-		int MaxHappiness;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
 		float MaxStamina = 100.0f;
