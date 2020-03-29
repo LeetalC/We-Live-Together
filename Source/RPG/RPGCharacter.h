@@ -96,6 +96,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
 		TArray<int> HappinessRequirementPerLevel;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
+		bool HappinessIsChanging = false;
+
 	//FUNCTIONS-------------------------------------------------------
 
 	UFUNCTION(BlueprintPure)
@@ -111,7 +114,13 @@ public:
 		void AddStamina(float value);
 
 	UFUNCTION(BlueprintCallable)
-		void AddHappiness(int Value, bool CanUseHappinessMultiplier);
+		void AddHappiness(int Goal, bool CanUseHappinessMultiplier);
+
+	UFUNCTION(BlueprintPure)
+		int GetHappinessRequiredForThisLevel();
+
+	//UFUNCTION(BlueprintCallable)
+	//	int AddHappinessInc(int Goal, bool CanUseHappinessMultiplier);
 
 	UFUNCTION(BlueprintCallable)
 		void AddLevel();
@@ -156,11 +165,11 @@ public:
 	void MyMoveForward(float Value);
 	void MyJump();
 	void MyStopJumping();
+	void AnimateHappinessBar();
 
 	
 
-	
-
+	int NewGoal = 0;
 	bool IsSprinting;
 
 

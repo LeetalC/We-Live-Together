@@ -2,6 +2,7 @@
 
 #include "RPGCharacter.h"
 #include "HeadMountedDisplayFunctionLibrary.h"
+#include "Engine/Engine.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/InputComponent.h"
@@ -124,9 +125,83 @@ void ARPGCharacter::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
 	CheckStamina(DeltaSeconds);
+	AnimateHappinessBar();
+
 
 }
 
+void ARPGCharacter::AnimateHappinessBar() {
+	if (HappinessIsChanging) {
+		if (NewGoal > 0) {
+			NewGoal--;
+			Happiness++;
+			HappinessChanged();
+		}
+		else {
+			NewGoal = 0;
+			HappinessIsChanging = false;
+		}
+	}
+}
+
+int ARPGCharacter::GetHappinessRequiredForThisLevel()
+{
+	return HappinessRequirementPerLevel[Level];
+}
+
+
+bool ARPGCharacter::CanAffordStaminaCost(float value) {
+	if (value < 0.0f) {
+		if (Stamina > abs(value)) {
+			return true;
+		}
+	}
+	else {
+		return true;
+	}
+	return false;
+}
+
+
+void ARPGCharacter::AddStamina(float value)
+{
+	Stamina += value;
+}
+
+
+void ARPGCharacter::AddHappiness(int Goal, bool CanUseHappinessMultiplier)
+{
+	if (CanUseHappinessMultiplier) NewGoal = Goal * HappinessMultiplier;
+	else NewGoal = Goal;
+	HappinessIsChanging = true;
+}
+
+void ARPGCharacter::SetStamina(float value)
+{
+	Stamina = value;
+
+}
+void ARPGCharacter::SetHappiness(int value)
+{
+	Happiness = value;
+}
+
+void ARPGCharacter::AddLevel()
+{
+	Level++;
+	PerkPoints++;
+}
+
+
+void ARPGCharacter::SetMaxSprintSpeed(float Value)
+{
+	MaxSprintSpeed = Value;
+}
+
+void ARPGCharacter::AddToStaminaDrainRate(float Value)
+{
+	StaminaDrainRate += Value;
+}
 
 
 void ARPGCharacter::CheckStamina(float DeltaSeconds) 
@@ -288,66 +363,3 @@ void ARPGCharacter::StopSprinting()
 	GetCharacterMovement()->MaxWalkSpeed = DefaultMaxWalkSpeed;
 }
 //END MOVEMENT INPUT FUNCTIONS-----------------------------------------------------
-
-bool ARPGCharacter::CanAffordStaminaCost(float value) {
-	if (value < 0.0f) {
-		if (Stamina > abs(value)) {
-			return true;
-		}
-	}
-	else {
-		return true;
-	}
-	return false;
-}
-
-
-void ARPGCharacter::AddStamina(float value)
-{
-	Stamina += value;
-}
-
-void ARPGCharacter::AddHappiness(int Value, bool CanUseHappinessMultiplier)
-{
-	PreviousHappiness = Happiness;
-
-	if (CanUseHappinessMultiplier)
-	{
-		Happiness += (Value * HappinessMultiplier);
-	}
-	else {
-		Happiness += Value;
-	}
-	TempHappiness += Happiness;
-	
-
-	HappinessChanged();
-	
-}
-
-void ARPGCharacter::SetStamina(float value)
-{
-	Stamina = value;
-
-}
-void ARPGCharacter::SetHappiness(int value)
-{
-	Happiness = value;
-}
-
-void ARPGCharacter::AddLevel()
-{
-	Level++;
-	PerkPoints++;
-}
-
-
-void ARPGCharacter::SetMaxSprintSpeed(float Value)
-{
-	MaxSprintSpeed = Value;
-}
-
-void ARPGCharacter::AddToStaminaDrainRate(float Value)
-{
-	StaminaDrainRate += Value;
-}
