@@ -48,6 +48,9 @@ public:
 		int MaxHappiness;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
+		int PreviousHappiness = 0;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
 		int TempHappiness = 0;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)

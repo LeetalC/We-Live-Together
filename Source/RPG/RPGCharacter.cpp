@@ -309,6 +309,8 @@ void ARPGCharacter::AddStamina(float value)
 
 void ARPGCharacter::AddHappiness(int Value, bool CanUseHappinessMultiplier)
 {
+	PreviousHappiness = Happiness;
+
 	if (CanUseHappinessMultiplier)
 	{
 		Happiness += (Value * HappinessMultiplier);
