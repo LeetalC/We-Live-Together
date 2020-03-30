@@ -38,6 +38,9 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Character Movement: Walking")
 		float MaxSprintSpeed;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character Movement: Walking")
+		bool UnlockedSprint = false;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
 		int Level = 1;
 

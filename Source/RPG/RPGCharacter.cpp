@@ -206,14 +206,15 @@ void ARPGCharacter::AddToStaminaDrainRate(float Value)
 
 void ARPGCharacter::CheckStamina(float DeltaSeconds) 
 {
+
 	if (GetVelocity().Size() >= 400.0f) IsSprinting = true;
 	else IsSprinting = false;
 
-	if (Stamina <= 0.0f) 
+	if (Stamina <= 0.0f)
 	{
 		StopSprinting();
 	}
-	if (IsSprinting == true) 
+	if (IsSprinting == true)
 	{
 		if (Stamina >= 0.0f)
 			Stamina -= StaminaDrainRate * DeltaSeconds;
@@ -353,13 +354,14 @@ void ARPGCharacter::MyStopJumping()
 
 void ARPGCharacter::Sprint()
 {
-
-	GetCharacterMovement()->MaxWalkSpeed = MaxSprintSpeed;
+	if(UnlockedSprint) GetCharacterMovement()->MaxWalkSpeed = MaxSprintSpeed;
 }
 
 void ARPGCharacter::StopSprinting()
 {
-	IsSprinting = false;
-	GetCharacterMovement()->MaxWalkSpeed = DefaultMaxWalkSpeed;
+	if (UnlockedSprint) {
+		IsSprinting = false;
+		GetCharacterMovement()->MaxWalkSpeed = DefaultMaxWalkSpeed;
+	}
 }
 //END MOVEMENT INPUT FUNCTIONS-----------------------------------------------------
