@@ -51,12 +51,6 @@ ARPGCharacter::ARPGCharacter()
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named MyCharacter (to avoid direct content references in C++)
 	//AbilitySystemComponent = CreateDefaultSubobject<UAbilitySystem>(TEXT("AbilitySystemComponent"));
-	Happiness = 0;
-	HappinessMultiplier = 1.0f;
-	NumberOfLevels = 20;
-	Breath = 100.0f;
-	BreathDraining = false;
-	Alive = true;
 
 
 	
@@ -229,7 +223,6 @@ void ARPGCharacter::ChangeBreath(bool isDraining)
 			Breath -= BreathDrainRate;
 		}
 		else if (Breath <= 0.0f) {
-			Alive = false;
 			Die();
 		}
 	}

@@ -79,7 +79,7 @@ public:
 		float StaminaFillRate = 5.0f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
-		float HappinessMultiplier;
+		float HappinessMultiplier = 1.0f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
 		int PerkPoints;
@@ -88,13 +88,10 @@ public:
 		int NumberOfLevels = 20;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
-		float Breath;
+		float Breath = 100.0f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
-		bool BreathDraining;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
-		bool Alive;
+		bool BreathDraining = false;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
 		TArray<int> HappinessRequirementPerLevel;
