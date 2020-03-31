@@ -64,6 +64,7 @@ void ARPGCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInput
 {
 	// Set up gameplay key bindings
 	check(PlayerInputComponent);
+
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ARPGCharacter::MyJump);
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ARPGCharacter::MyStopJumping);
 
