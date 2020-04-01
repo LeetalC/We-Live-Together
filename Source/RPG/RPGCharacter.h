@@ -25,11 +25,11 @@ public:
 	virtual void BeginPlay();
 
 	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera)
 		float BaseTurnRate;
 
 	/** Base look up/down rate, in deg/sec. Other scaling may affect final rate. */
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera)
 		float BaseLookUpRate;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Character Movement: Walking")
@@ -41,15 +41,26 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character Movement: Walking")
 		bool UnlockedSprint = false;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character Movement: Walking")
+		bool InputBlocked = false;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
 		int Level = 1;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
+		int PerkPoints;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
+		TArray<int> HappinessRequirementPerLevel;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
+		bool HappinessIsChanging = false;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
 		int Happiness = 0;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
-		int MaxHappiness;
-
+		float HappinessMultiplier = 1.0f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
 		float Stamina = 100.0f;
@@ -58,29 +69,10 @@ public:
 		float StaminaDecrement = 1.0f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
-		float BreathDrainRate;
+		float BreathDrainRate = .6f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
 		float BreathFillRate;
-	
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
-		float MaxStamina = 100.0f;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
-		float StaminaDrainRate = 5.0f;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
-		float StaminaFillRate = 5.0f;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
-		float HappinessMultiplier = 1.0f;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
-		int PerkPoints;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
-		int NumberOfLevels = 20;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
 		float Breath = 100.0f;
@@ -89,10 +81,28 @@ public:
 		bool BreathDraining = false;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
-		TArray<int> HappinessRequirementPerLevel;
+		float BreathFillRateDefault = 1.1f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
-		bool HappinessIsChanging = false;
+		float MaxBreath = 100.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
+		float MaxStamina = 100.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
+		float StaminaDrainRate = 10.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
+		float StaminaFillRate = 5.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
+		float StaminaFillRateDefault = 5.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
+		float StaminaFillMultiplier = 5.0f;
+
+
+
 
 	//FUNCTIONS-------------------------------------------------------
 
@@ -100,22 +110,22 @@ public:
 		bool CanAffordStaminaCost(float Value);
 
 	UFUNCTION(BlueprintCallable)
-		void SetStamina(float value);
+		void RestoreStamina();
 
 	UFUNCTION(BlueprintCallable)
-		void SetHappiness(int value);
+		void SetStamina(float Value);
 
 	UFUNCTION(BlueprintCallable)
-		void AddStamina(float value);
+		void SetHappiness(int Value);
+
+	UFUNCTION(BlueprintCallable)
+		void AddStamina(float Value);
 
 	UFUNCTION(BlueprintCallable)
 		void AddHappiness(int Goal, bool CanUseHappinessMultiplier);
 
 	UFUNCTION(BlueprintPure)
 		int GetHappinessRequiredForThisLevel();
-
-	//UFUNCTION(BlueprintCallable)
-	//	int AddHappinessInc(int Goal, bool CanUseHappinessMultiplier);
 
 	UFUNCTION(BlueprintCallable)
 		void AddLevel();
@@ -127,7 +137,7 @@ public:
 		void AddToStaminaDrainRate(float Value);
 	
 	UFUNCTION(BlueprintCallable)
-		void ChangeBreath(bool isDraining);
+		void ChangeBreath(bool IsDraining);
 
 
 	//EVENTS-------------------------------------------------------------------------
@@ -153,17 +163,15 @@ public:
 	UFUNCTION(BlueprintCallable)
 		void StopSprinting();
 
-
+private:
 	void CheckStamina(float DeltaSeconds);
-	void MoveBack(float Value);
+	void MoveBack();
+	void MoveBackReleased();
 	void MyMoveRight(float Value);
 	void MyMoveForward(float Value);
 	void MyJump();
 	void MyStopJumping();
 	void AnimateHappinessBar();
-
-	
-
 	int NewGoal = 0;
 	bool IsSprinting;
 

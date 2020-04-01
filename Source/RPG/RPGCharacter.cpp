@@ -66,13 +66,17 @@ void ARPGCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInput
 	check(PlayerInputComponent);
 
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ARPGCharacter::MyJump);
-	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ARPGCharacter::MyStopJumping);
+	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
 
 	PlayerInputComponent->BindAction("Sprint", IE_Pressed, this, &ARPGCharacter::Sprint);
 	PlayerInputComponent->BindAction("Sprint", IE_Released, this, &ARPGCharacter::StopSprinting);
 
+	PlayerInputComponent->BindAction("MoveBack", IE_Pressed, this, &ARPGCharacter::MoveBack);
+	PlayerInputComponent->BindAction("MoveBack", IE_Released, this, &ARPGCharacter::MoveBackReleased);
+
+
 	PlayerInputComponent->BindAxis("MoveForward", this, &ARPGCharacter::MyMoveForward);
-	PlayerInputComponent->BindAxis("MoveBack", this, &ARPGCharacter::MoveBack);
+	//PlayerInputComponent->BindAxis("MoveBack", this, &ARPGCharacter::MoveBack);
 	PlayerInputComponent->BindAxis("MoveRight", this, &ARPGCharacter::MyMoveRight);
 
 	// We have 2 versions of the rotation bindings to handle different kinds of devices differently
@@ -92,23 +96,6 @@ void ARPGCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInput
 
 }
 
-void ARPGCharacter::OnResetVR()
-{
-	UHeadMountedDisplayFunctionLibrary::ResetOrientationAndPosition();
-}
-
-
-
-void ARPGCharacter::TouchStarted(ETouchIndex::Type FingerIndex, FVector Location)
-{
-		Jump();
-}
-
-void ARPGCharacter::TouchStopped(ETouchIndex::Type FingerIndex, FVector Location)
-{
-		StopJumping();
-}
-
 void ARPGCharacter::BeginPlay()
 {
 	Super::BeginPlay();
@@ -121,33 +108,17 @@ void ARPGCharacter::Tick(float DeltaSeconds)
 	Super::Tick(DeltaSeconds);
 	CheckStamina(DeltaSeconds);
 	AnimateHappinessBar();
-
-
 }
 
-void ARPGCharacter::AnimateHappinessBar() {
-	if (HappinessIsChanging) {
-		if (NewGoal > 0) {
-			NewGoal--;
-			Happiness++;
-			HappinessChanged();
-		}
-		else {
-			NewGoal = 0;
-			HappinessIsChanging = false;
-		}
-	}
-}
-
-int ARPGCharacter::GetHappinessRequiredForThisLevel()
+//--------------------Stamina Functions--------------------------
+void ARPGCharacter::RestoreStamina()
 {
-	return HappinessRequirementPerLevel[Level];
+	StaminaFillRate = StaminaFillRateDefault * StaminaFillMultiplier;
 }
 
-
-bool ARPGCharacter::CanAffordStaminaCost(float value) {
-	if (value < 0.0f) {
-		if (Stamina > abs(value)) {
+bool ARPGCharacter::CanAffordStaminaCost(float Value) {
+	if (Value < 0.0f) {
+		if (Stamina > abs(Value)) {
 			return true;
 		}
 	}
@@ -157,49 +128,21 @@ bool ARPGCharacter::CanAffordStaminaCost(float value) {
 	return false;
 }
 
-
-void ARPGCharacter::AddStamina(float value)
+void ARPGCharacter::AddStamina(float Value)
 {
-	Stamina += value;
+	Stamina += Value;
 }
 
-
-void ARPGCharacter::AddHappiness(int Goal, bool CanUseHappinessMultiplier)
+void ARPGCharacter::SetStamina(float Value)
 {
-	if (CanUseHappinessMultiplier) NewGoal = Goal * HappinessMultiplier;
-	else NewGoal = Goal;
-	HappinessIsChanging = true;
+	Stamina = Value;
 }
-
-void ARPGCharacter::SetStamina(float value)
-{
-	Stamina = value;
-
-}
-void ARPGCharacter::SetHappiness(int value)
-{
-	Happiness = value;
-}
-
-void ARPGCharacter::AddLevel()
-{
-	Level++;
-	PerkPoints++;
-}
-
-
-void ARPGCharacter::SetMaxSprintSpeed(float Value)
-{
-	MaxSprintSpeed = Value;
-}
-
 void ARPGCharacter::AddToStaminaDrainRate(float Value)
 {
 	StaminaDrainRate += Value;
 }
 
-
-void ARPGCharacter::CheckStamina(float DeltaSeconds) 
+void ARPGCharacter::CheckStamina(float DeltaSeconds)
 {
 
 	if (GetVelocity().Size() >= 400.0f) IsSprinting = true;
@@ -217,9 +160,49 @@ void ARPGCharacter::CheckStamina(float DeltaSeconds)
 	else if (Stamina < MaxStamina) Stamina += StaminaFillRate * DeltaSeconds;
 }
 
-void ARPGCharacter::ChangeBreath(bool isDraining)
+//---------------Happiness Functions-------------------------------
+void ARPGCharacter::AddHappiness(int Goal, bool CanUseHappinessMultiplier)
 {
-	if (isDraining) {
+	if (CanUseHappinessMultiplier) NewGoal = Goal * HappinessMultiplier;
+	else NewGoal = Goal;
+
+	HappinessIsChanging = true;
+}
+
+int ARPGCharacter::GetHappinessRequiredForThisLevel()
+{
+	return HappinessRequirementPerLevel[Level];
+}
+
+void ARPGCharacter::SetHappiness(int Value)
+{
+	Happiness = Value;
+}
+
+void ARPGCharacter::AddLevel()
+{
+	Level++;
+	PerkPoints++;
+}
+
+void ARPGCharacter::AnimateHappinessBar() {
+	//animating the fill of the happiness bar
+	if (HappinessIsChanging) {
+		if (NewGoal > 0) {
+			NewGoal--;
+			Happiness += 2.5f;
+			HappinessChanged();
+		}
+		else {
+			NewGoal = 0;
+			HappinessIsChanging = false;
+		}
+	}
+}
+//-------------------Breath-----------------------------------
+void ARPGCharacter::ChangeBreath(bool IsDraining)
+{
+	if (IsDraining) {
 		if (Breath > 0.0f) {
 			Breath -= BreathDrainRate;
 		}
@@ -236,6 +219,7 @@ void ARPGCharacter::ChangeBreath(bool isDraining)
 }
 
 
+
 //MOVEMENT INPUT FUNCTIONS-----------------------------------------------------
 void ARPGCharacter::TurnAtRate(float Rate)
 {
@@ -248,58 +232,68 @@ void ARPGCharacter::LookUpAtRate(float Rate)
 	// calculate delta for this frame from the rate information
 	AddControllerPitchInput(Rate * BaseLookUpRate * GetWorld()->GetDeltaSeconds());
 }
+//
+//void ARPGCharacter::MoveForward(float Value)
+//{
+//	if ((Controller != NULL) && (Value != 0.0f))
+//	{
+//		// find out which way is forward
+//		const FRotator Rotation = Controller->GetControlRotation();
+//		const FRotator YawRotation(0, Rotation.Yaw, 0);
+//
+//		// get forward vector
+//		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
+//		AddMovementInput(Direction, Value);
+//		CharacterMoved();
+//	}
+//}
 
-void ARPGCharacter::MoveForward(float Value)
-{
-	if ((Controller != NULL) && (Value != 0.0f))
-	{
-		// find out which way is forward
-		const FRotator Rotation = Controller->GetControlRotation();
-		const FRotator YawRotation(0, Rotation.Yaw, 0);
-
-		// get forward vector
-		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
-		AddMovementInput(Direction, Value);
-		CharacterMoved();
-	}
-}
-
-void ARPGCharacter::MoveRight(float Value)
-{
-	if ( (Controller != NULL) && (Value != 0.0f) )
-	{
-		// find out which way is right
-		const FRotator Rotation = Controller->GetControlRotation();
-		const FRotator YawRotation(0, Rotation.Yaw, 0);
-	
-		// get right vector 
-		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
-		// add movement in that direction
-		AddMovementInput(Direction, Value);
-		CharacterMoved();
-	}
-}
+//void ARPGCharacter::MoveRight(float Value)
+//{
+//	if ( (Controller != NULL) && (Value != 0.0f) )
+//	{
+//		// find out which way is right
+//		const FRotator Rotation = Controller->GetControlRotation();
+//		const FRotator YawRotation(0, Rotation.Yaw, 0);
+//	
+//		// get right vector 
+//		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
+//		// add movement in that direction
+//		AddMovementInput(Direction, Value);
+//		CharacterMoved();
+//	}
+//}
 
 //MY CUSTOM MOVEMENT FUNCTIONS-------
 
-void ARPGCharacter::MoveBack(float Value) {
-	if ((Controller != NULL) && (Value != 0.0f))
+void ARPGCharacter::MoveBack() {
+	if ((Controller != NULL))
 	{
+		InputBlocked = true;
 		GetCharacterMovement()->bOrientRotationToMovement = false;
 		// find out which way is forward
-		//const FRotator Rotation = Controller->GetControlRotation();
-		//const FRotator YawRotation(0, Rotation.Yaw, 0);
+		const FRotator Rotation = Controller->GetControlRotation();
+		const FRotator YawRotation(0, Rotation.Yaw, 0);
 
 		// get forward vector
 		//const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
 		const FVector Direction = GetActorForwardVector();
-		AddMovementInput(Direction, Value);
+		AddMovementInput(Direction, 1.0f);
 		CharacterMoved();
 	}
+	
+}
+
+void ARPGCharacter::MoveBackReleased() {
+	if ((Controller != NULL))
+	{
+		InputBlocked = false;
+	}
+
 }
 
 void ARPGCharacter::MyMoveForward(float Value) {
-	if ((Controller != NULL) && (Value != 0.0f))
+	if ((Controller != NULL) && (Value != 0.0f) && !InputBlocked)
 	{
 		GetCharacterMovement()->bOrientRotationToMovement = true;
 		// find out which way is forward
@@ -314,7 +308,7 @@ void ARPGCharacter::MyMoveForward(float Value) {
 }
 
 void ARPGCharacter::MyMoveRight(float Value) {
-	if ((Controller != NULL) && (Value != 0.0f))
+	if ((Controller != NULL) && (Value != 0.0f) && !InputBlocked)
 	{
 		// find out which way is right
 		GetCharacterMovement()->bOrientRotationToMovement = true;
@@ -358,4 +352,28 @@ void ARPGCharacter::StopSprinting()
 		GetCharacterMovement()->MaxWalkSpeed = DefaultMaxWalkSpeed;
 	}
 }
+
+void ARPGCharacter::SetMaxSprintSpeed(float Value)
+{
+	MaxSprintSpeed = Value;
+}
 //END MOVEMENT INPUT FUNCTIONS-----------------------------------------------------
+
+
+//-------------Provided by Unreal---------------------------------
+void ARPGCharacter::OnResetVR()
+{
+	UHeadMountedDisplayFunctionLibrary::ResetOrientationAndPosition();
+}
+
+
+
+void ARPGCharacter::TouchStarted(ETouchIndex::Type FingerIndex, FVector Location)
+{
+	Jump();
+}
+
+void ARPGCharacter::TouchStopped(ETouchIndex::Type FingerIndex, FVector Location)
+{
+	StopJumping();
+}
