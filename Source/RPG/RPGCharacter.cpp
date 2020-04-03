@@ -163,8 +163,14 @@ void ARPGCharacter::CheckStamina(float DeltaSeconds)
 //---------------Happiness Functions-------------------------------
 void ARPGCharacter::AddHappiness(int Goal, bool CanUseHappinessMultiplier)
 {
-	if (CanUseHappinessMultiplier) NewGoal = Goal * HappinessMultiplier;
-	else NewGoal = Goal;
+	if (CanUseHappinessMultiplier)
+	{
+		NewGoal = Goal * HappinessMultiplier;
+	}
+	else
+	{
+		NewGoal = Goal;
+	}
 
 	HappinessIsChanging = true;
 }
@@ -189,8 +195,8 @@ void ARPGCharacter::AnimateHappinessBar() {
 	//animating the fill of the happiness bar
 	if (HappinessIsChanging) {
 		if (NewGoal > 0) {
-			NewGoal--;
-			Happiness += 2.5f;
+			NewGoal -= 5;
+			Happiness += 5;
 			HappinessChanged();
 		}
 		else {
@@ -339,7 +345,6 @@ void ARPGCharacter::MyStopJumping()
 	bPressedJump = false;
 	ResetJumpState();
 }
-
 void ARPGCharacter::Sprint()
 {
 	if(UnlockedSprint) GetCharacterMovement()->MaxWalkSpeed = MaxSprintSpeed;
@@ -357,6 +362,29 @@ void ARPGCharacter::SetMaxSprintSpeed(float Value)
 {
 	MaxSprintSpeed = Value;
 }
+
+//void ARPGCharacter::Jumped()
+//{
+//	if (JumpAllowed)
+//	{
+//		//OnJumped();
+//		GetCharacterMovement()->bOrientRotationToMovement = false;
+//		Controller->DisableInput(GetWorld()->GetFirstPlayerController());
+//		JumpAllowed = false;
+//		DashAllowed = false;
+//	}
+//
+//}
+//void ARPGCharacter::Landing()
+//{
+//	if (!JumpAllowed) {
+//		//OnLanded(const FHitResult& Hit);
+//		Controller->EnableInput(GetWorld()->GetFirstPlayerController());
+//		GetCharacterMovement()->bOrientRotationToMovement = true;
+//		JumpAllowed = true;
+//		DashAllowed = true;
+//	}
+//}
 //END MOVEMENT INPUT FUNCTIONS-----------------------------------------------------
 
 

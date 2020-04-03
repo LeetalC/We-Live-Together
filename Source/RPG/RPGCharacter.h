@@ -101,6 +101,12 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
 		float StaminaFillMultiplier = 5.0f;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
+		bool JumpAllowed = true;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
+		bool DashAllowed = true;
+
 
 
 
@@ -156,6 +162,12 @@ public:
 
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = StatEvent)
 		void Die();
+
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = StatEvent)
+		void Jumped();
+
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = StatEvent)
+		void Landing();
 
 	//SPRINTING-----------------------------
 	void Sprint();
