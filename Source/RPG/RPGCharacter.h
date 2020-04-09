@@ -163,11 +163,12 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = StatEvent)
 		void Die();
 
-	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = StatEvent)
-		void Jumped();
+	//Want to move all jump functionality to code
+	//UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = StatEvent)
+	//	void Jumped();
 
-	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = StatEvent)
-		void Landing();
+	//UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = StatEvent)
+	//	void Landing();
 
 	//SPRINTING-----------------------------
 	void Sprint();
@@ -178,7 +179,7 @@ public:
 private:
 	void CheckStamina(float DeltaSeconds);
 	void MoveBack();
-	void MoveBackReleased();
+	//void MoveBackReleased();
 	void MyMoveRight(float Value);
 	void MyMoveForward(float Value);
 	void MyJump();

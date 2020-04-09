@@ -71,9 +71,6 @@ void ARPGCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInput
 	PlayerInputComponent->BindAction("Sprint", IE_Pressed, this, &ARPGCharacter::Sprint);
 	PlayerInputComponent->BindAction("Sprint", IE_Released, this, &ARPGCharacter::StopSprinting);
 
-	PlayerInputComponent->BindAction("MoveBack", IE_Pressed, this, &ARPGCharacter::MoveBack);
-	PlayerInputComponent->BindAction("MoveBack", IE_Released, this, &ARPGCharacter::MoveBackReleased);
-
 
 	PlayerInputComponent->BindAxis("MoveForward", this, &ARPGCharacter::MyMoveForward);
 	//PlayerInputComponent->BindAxis("MoveBack", this, &ARPGCharacter::MoveBack);
@@ -238,65 +235,6 @@ void ARPGCharacter::LookUpAtRate(float Rate)
 	// calculate delta for this frame from the rate information
 	AddControllerPitchInput(Rate * BaseLookUpRate * GetWorld()->GetDeltaSeconds());
 }
-//
-//void ARPGCharacter::MoveForward(float Value)
-//{
-//	if ((Controller != NULL) && (Value != 0.0f))
-//	{
-//		// find out which way is forward
-//		const FRotator Rotation = Controller->GetControlRotation();
-//		const FRotator YawRotation(0, Rotation.Yaw, 0);
-//
-//		// get forward vector
-//		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
-//		AddMovementInput(Direction, Value);
-//		CharacterMoved();
-//	}
-//}
-
-//void ARPGCharacter::MoveRight(float Value)
-//{
-//	if ( (Controller != NULL) && (Value != 0.0f) )
-//	{
-//		// find out which way is right
-//		const FRotator Rotation = Controller->GetControlRotation();
-//		const FRotator YawRotation(0, Rotation.Yaw, 0);
-//	
-//		// get right vector 
-//		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
-//		// add movement in that direction
-//		AddMovementInput(Direction, Value);
-//		CharacterMoved();
-//	}
-//}
-
-//MY CUSTOM MOVEMENT FUNCTIONS-------
-
-void ARPGCharacter::MoveBack() {
-	if ((Controller != NULL))
-	{
-		InputBlocked = true;
-		GetCharacterMovement()->bOrientRotationToMovement = false;
-		// find out which way is forward
-		const FRotator Rotation = Controller->GetControlRotation();
-		const FRotator YawRotation(0, Rotation.Yaw, 0);
-
-		// get forward vector
-		//const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
-		const FVector Direction = GetActorForwardVector();
-		AddMovementInput(Direction, 1.0f);
-		CharacterMoved();
-	}
-	
-}
-
-void ARPGCharacter::MoveBackReleased() {
-	if ((Controller != NULL))
-	{
-		InputBlocked = false;
-	}
-
-}
 
 void ARPGCharacter::MyMoveForward(float Value) {
 	if ((Controller != NULL) && (Value != 0.0f) && !InputBlocked)
@@ -330,6 +268,27 @@ void ARPGCharacter::MyMoveRight(float Value) {
 
 }
 
+//MY CUSTOM MOVEMENT FUNCTIONS-------
+//Moving backwards is disabled, need to rework it
+void ARPGCharacter::MoveBack() {
+	if ((Controller != NULL))
+	{
+		InputBlocked = true;
+		GetCharacterMovement()->bOrientRotationToMovement = false;
+		// find out which way is forward
+		const FRotator Rotation = Controller->GetControlRotation();
+		const FRotator YawRotation(0, Rotation.Yaw, 0);
+
+		// get forward vector
+		//const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
+		const FVector Direction = GetActorForwardVector();
+		AddMovementInput(Direction, 1.0f);
+		CharacterMoved();
+	}
+	
+}
+
+
 void ARPGCharacter::MyJump()
 {
 	if (GetVelocity().Size() > 400.0f)
@@ -362,29 +321,6 @@ void ARPGCharacter::SetMaxSprintSpeed(float Value)
 {
 	MaxSprintSpeed = Value;
 }
-
-//void ARPGCharacter::Jumped()
-//{
-//	if (JumpAllowed)
-//	{
-//		//OnJumped();
-//		GetCharacterMovement()->bOrientRotationToMovement = false;
-//		Controller->DisableInput(GetWorld()->GetFirstPlayerController());
-//		JumpAllowed = false;
-//		DashAllowed = false;
-//	}
-//
-//}
-//void ARPGCharacter::Landing()
-//{
-//	if (!JumpAllowed) {
-//		//OnLanded(const FHitResult& Hit);
-//		Controller->EnableInput(GetWorld()->GetFirstPlayerController());
-//		GetCharacterMovement()->bOrientRotationToMovement = true;
-//		JumpAllowed = true;
-//		DashAllowed = true;
-//	}
-//}
 //END MOVEMENT INPUT FUNCTIONS-----------------------------------------------------
 
 
