@@ -134,7 +134,7 @@ public:
 		int GetHappinessRequiredForThisLevel();
 
 	UFUNCTION(BlueprintCallable)
-		void AddLevel();
+		void AddLevelAndPerkPoint();
 
 	UFUNCTION(BlueprintCallable)
 		void SetMaxSprintSpeed(float Value);
@@ -154,6 +154,9 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = StatEvent)
 		void HappinessChanged();
 
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = StatEvent)
+		void LeveledUp();
+
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = Movement)
 		void CharacterMoved();
 
@@ -163,13 +166,6 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = StatEvent)
 		void Die();
 
-	//Want to move all jump functionality to code
-	//UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = StatEvent)
-	//	void Jumped();
-
-	//UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = StatEvent)
-	//	void Landing();
-
 	//SPRINTING-----------------------------
 	void Sprint();
 
@@ -177,22 +173,20 @@ public:
 		void StopSprinting();
 
 private:
-	void CheckStamina(float DeltaSeconds);
+	void CheckStamina();
+	void CheckForLevelUp();
 	void MoveBack();
-	//void MoveBackReleased();
 	void MyMoveRight(float Value);
 	void MyMoveForward(float Value);
 	void MyJump();
 	void MyStopJumping();
 	void AnimateHappinessBar();
+
 	int NewGoal = 0;
 	bool IsSprinting;
 
 
 protected:
-
-	/** Resets HMD orientation in VR. */
-	void OnResetVR();
 
 	/** Called for forwards/backward input */
 	void MoveForward(float Value);
@@ -200,23 +194,10 @@ protected:
 	/** Called for side to side input */
 	void MoveRight(float Value);
 
-	/** 
-	 * Called via input to turn at a given rate. 
-	 * @param Rate	This is a normalized rate, i.e. 1.0 means 100% of desired turn rate
-	 */
 	void TurnAtRate(float Rate);
 
-	/**
-	 * Called via input to turn look up/down at a given rate. 
-	 * @param Rate	This is a normalized rate, i.e. 1.0 means 100% of desired turn rate
-	 */
 	void LookUpAtRate(float Rate);
 
-	/** Handler for when a touch input begins. */
-	void TouchStarted(ETouchIndex::Type FingerIndex, FVector Location);
-
-	/** Handler for when a touch input stops. */
-	void TouchStopped(ETouchIndex::Type FingerIndex, FVector Location);
 
 
 	virtual void Tick(float DeltaSeconds);
