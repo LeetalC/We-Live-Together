@@ -87,8 +87,10 @@ void ARPGCharacter::BeginPlay()
 void ARPGCharacter::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
+
 	CheckStamina();
 	AnimateHappinessBar();
+	UpdateSmokeArray();	//Smoke array is how the game determines if a player is in a cloud of smoke, which affects breath
 }
 
 //--------------------Stamina Functions--------------------------
@@ -97,15 +99,14 @@ void ARPGCharacter::RestoreStamina()
 	StaminaFillRate = StaminaFillRateDefault * StaminaFillMultiplier;
 }
 
-bool ARPGCharacter::CanAffordStaminaCost(float Value) {
-	if (Value < 0.0f) {
-		if (Stamina > abs(Value)) {
-			return true;
-		}
+bool ARPGCharacter::CanAffordStaminaCost(float Value) 
+{
+	if (Value < 0.0f) 
+	{
+		if (Stamina > abs(Value)) return true;
 	}
-	else {
-		return true;
-	}
+	else return true;
+
 	return false;
 }
 
@@ -123,13 +124,6 @@ void ARPGCharacter::AddToStaminaDrainRate(float Value)
 {
 	StaminaDrainRate += Value;
 }
-void ARPGCharacter::CheckForLevelUp() {
-	if (Happiness >= GetHappinessRequiredForThisLevel()) 
-	{
-		Happiness -= GetHappinessRequiredForThisLevel();
-		AddLevelAndPerkPoint();
-	}
-}
 
 void ARPGCharacter::CheckStamina()
 {
@@ -143,30 +137,44 @@ void ARPGCharacter::CheckStamina()
 	}
 	if (IsSprinting == true)
 	{
-		if (Stamina >= 0.0f)
+		if (Stamina >= 0.0f) 
+		{
 			Stamina -= StaminaDrainRate * GetWorld()->GetDeltaSeconds();
+		}
 	}
-	else if (Stamina < MaxStamina) Stamina += StaminaFillRate * GetWorld()->GetDeltaSeconds();
+	else if (Stamina < MaxStamina)
+	{
+		Stamina += StaminaFillRate * GetWorld()->GetDeltaSeconds();
+	}
 }
 
 //---------------Happiness Functions-------------------------------
 void ARPGCharacter::AddHappiness(int Goal, bool CanUseHappinessMultiplier)
 {
-	if (CanUseHappinessMultiplier)
-	{
-		NewGoal = Goal * HappinessMultiplier;
-	}
-	else
-	{
-		NewGoal = Goal;
-	}
+	if (Level < MaxLevel) {
+		if (CanUseHappinessMultiplier)
+		{
+			NewGoal = Goal * HappinessMultiplier;
+		}
+		else
+		{
+			NewGoal = Goal;
+		}
 
-	HappinessIsChanging = true;
+		HappinessIsChanging = true;
+	}
 }
 
 int ARPGCharacter::GetHappinessRequiredForThisLevel()
 {
-	return HappinessRequirementPerLevel[Level];
+	if (Level < MaxLevel) 
+	{
+		return HappinessRequirementPerLevel[Level];
+	}
+	else 
+	{
+		return HappinessRequirementPerLevel[MaxLevel - 1];
+	}
 }
 
 void ARPGCharacter::SetHappiness(int Value)
@@ -181,57 +189,74 @@ void ARPGCharacter::AddLevelAndPerkPoint()
 	LeveledUp();
 }
 
-void ARPGCharacter::AnimateHappinessBar() {
+void ARPGCharacter::CheckForLevelUp()
+{
+	if (Happiness >= GetHappinessRequiredForThisLevel())
+	{
+		Happiness -= GetHappinessRequiredForThisLevel();
+		AddLevelAndPerkPoint();
+	}
+}
+
+void ARPGCharacter::AnimateHappinessBar() 
+{
 	//animating the fill of the happiness bar
-	if (HappinessIsChanging) {
-		if (NewGoal > 0) {
+	if (HappinessIsChanging) 
+	{
+		if (NewGoal > 0) 
+		{
 			NewGoal -= 5;
 			Happiness += 5;
 			HappinessChanged();
 			CheckForLevelUp();
 		}
-		else {
+		else 
+		{
 			NewGoal = 0;
 			HappinessIsChanging = false;
 		}
 	}
-	
+
 }
 //-------------------Breath-----------------------------------
 void ARPGCharacter::ChangeBreath(bool IsDraining)
 {
-	if (IsDraining) {
-		if (Breath > 0.0f) {
-			Breath -= BreathDrainRate;
+	if (IsDraining) 
+	{
+		if (Breath > 0.0f)
+		{
+			Breath -= BreathDrainRate * GetWorld()->GetDeltaSeconds();
 		}
-		else if (Breath <= 0.0f) {
+		else if (Breath <= 0.0f)
+		{
 			Die();
 		}
 	}
 	else 
 	{
-		if (Breath <= 100.0f)
-			Breath += BreathFillRate;
+		if (Breath <= 100.0f) {
+			Breath += BreathFillRate * GetWorld()->GetDeltaSeconds();
+		}
 	}
 
 }
 
-
-
-//MOVEMENT INPUT FUNCTIONS-----------------------------------------------------
-void ARPGCharacter::TurnAtRate(float Rate)
+void ARPGCharacter::UpdateSmokeArray()
 {
-	// calculate delta for this frame from the rate information
-	AddControllerYawInput(Rate * BaseTurnRate * GetWorld()->GetDeltaSeconds());
+	if (OverlappedSmokeArray.Num() > 0)
+	{
+		ChangeBreath(true);
+	}
+	else
+	{
+		ChangeBreath(false);
+	}
 }
 
-void ARPGCharacter::LookUpAtRate(float Rate)
-{
-	// calculate delta for this frame from the rate information
-	AddControllerPitchInput(Rate * BaseLookUpRate * GetWorld()->GetDeltaSeconds());
-}
+//MY CUSTOM/DEFAULT EDITED MOVEMENT FUNCTIONS-------
 
-void ARPGCharacter::MyMoveForward(float Value) {
+void ARPGCharacter::MyMoveForward(float Value)
+{
 	if ((Controller != NULL) && (Value != 0.0f) && !InputBlocked)
 	{
 		GetCharacterMovement()->bOrientRotationToMovement = true;
@@ -246,7 +271,8 @@ void ARPGCharacter::MyMoveForward(float Value) {
 	}
 }
 
-void ARPGCharacter::MyMoveRight(float Value) {
+void ARPGCharacter::MyMoveRight(float Value)
+{
 	if ((Controller != NULL) && (Value != 0.0f) && !InputBlocked)
 	{
 		// find out which way is right
@@ -263,9 +289,9 @@ void ARPGCharacter::MyMoveRight(float Value) {
 
 }
 
-//MY CUSTOM MOVEMENT FUNCTIONS-------
 //Moving backwards is disabled, need to rework it
-void ARPGCharacter::MoveBack() {
+void ARPGCharacter::MoveBack() 
+{
 	if ((Controller != NULL))
 	{
 		InputBlocked = true;
@@ -305,7 +331,8 @@ void ARPGCharacter::Sprint()
 
 void ARPGCharacter::StopSprinting()
 {
-	if (UnlockedSprint) {
+	if (UnlockedSprint) 
+	{
 		IsSprinting = false;
 		GetCharacterMovement()->MaxWalkSpeed = DefaultMaxWalkSpeed;
 	}
@@ -315,4 +342,18 @@ void ARPGCharacter::SetMaxSprintSpeed(float Value)
 {
 	MaxSprintSpeed = Value;
 }
-//END MOVEMENT INPUT FUNCTIONS-----------------------------------------------------
+
+
+
+//MOVEMENT INPUT FUNCTIONS (PROVIDED BY UNREAL)------------------------------------------
+void ARPGCharacter::TurnAtRate(float Rate)
+{
+	// calculate delta for this frame from the rate information
+	AddControllerYawInput(Rate * BaseTurnRate * GetWorld()->GetDeltaSeconds());
+}
+
+void ARPGCharacter::LookUpAtRate(float Rate)
+{
+	// calculate delta for this frame from the rate information
+	AddControllerPitchInput(Rate * BaseLookUpRate * GetWorld()->GetDeltaSeconds());
+}

@@ -4,7 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "GameFramework/Actor.h"
 #include "RPGCharacter.generated.h"
+
 
 
 
@@ -48,6 +50,9 @@ public:
 		int Level = 1;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
+		int MaxLevel = 10;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
 		int PerkPoints;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
@@ -68,22 +73,25 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
 		float StaminaDecrement = 1.0f;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
-		float BreathDrainRate = .6f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = BreathStat)
+		float BreathDrainRate = 50.0f;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
-		float BreathFillRate;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = BreathStat)
+		float BreathFillRate = 100.0f;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = BreathStat)
 		float Breath = 100.0f;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = BreathStat)
 		bool BreathDraining = false;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
-		float BreathFillRateDefault = 1.1f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = BreathStat)
+		TArray<AActor*> OverlappedSmokeArray;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = BreathStat)
+		float BreathFillRateDefault = 100.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = BreathStat)
 		float MaxBreath = 100.0f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
@@ -101,16 +109,19 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
 		float StaminaFillMultiplier = 5.0f;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Ability)
 		bool JumpAllowed = true;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Ability)
 		bool DashAllowed = true;
 
 
 
 
 	//FUNCTIONS-------------------------------------------------------
+
+	UFUNCTION(BlueprintCallable)
+		void UpdateSmokeArray();
 
 	UFUNCTION(BlueprintPure)
 		bool CanAffordStaminaCost(float Value);
@@ -188,11 +199,11 @@ private:
 
 protected:
 
-	/** Called for forwards/backward input */
-	void MoveForward(float Value);
+	///** Called for forwards/backward input */
+	//void MoveForward(float Value);
 
-	/** Called for side to side input */
-	void MoveRight(float Value);
+	///** Called for side to side input */
+	//void MoveRight(float Value);
 
 	void TurnAtRate(float Rate);
 
