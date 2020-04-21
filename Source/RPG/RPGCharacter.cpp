@@ -200,7 +200,7 @@ void ARPGCharacter::CheckForLevelUp()
 
 void ARPGCharacter::AnimateHappinessBar() 
 {
-	//animating the fill of the happiness bar
+	//Animating the fill of the happiness bar
 	if (HappinessIsChanging) 
 	{
 		if (NewGoal > 0) 
